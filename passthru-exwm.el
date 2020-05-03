@@ -67,8 +67,8 @@ Recommended to also call `passthru-exwm-passthrough-all' to ensure Emacs keymaps
 ;;         ;; Replay event:
 ;;         xcb:Allow:ReplayPointer))))
 
-(defun passthru-exwm--ButtonPress-override (_buffer _button-event)
-  xcb:Allow:ReplayPointer)
+(defun passthru-exwm--ButtonPress-override (&rest _)
+  (exwm-input--on-ButtonPress-char-mode))
 
 ;;;###autoload
 (define-minor-mode passthru-exwm-all-mode
