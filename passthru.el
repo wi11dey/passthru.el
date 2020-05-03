@@ -89,8 +89,10 @@
     "Forwarded keyboard macro. Every key used in this sequence will be forwarded, in order, to the application without being consumed by Emacs."
     (interactive)
     (dolist (key keys)
-      (push key unread-command-events)
-      (passthru--read-key-forward nil forward-func))))
+      (if (functionp key)
+	  (funcall key)
+	(push key unread-command-events)
+	(passthru--read-key-forward nil forward-func)))))
 
 ;;;###autoload
 (defun passthru (map &optional forward-func keybinds)
@@ -111,7 +113,7 @@
 	      (if (stringp key)
 		  (kbd key)
 		key)
-	      (if (commandp value 'for-call-interactively)
+	      (if (commandp value :for-call-interactively)
 		  value
 		(passthru--simulated-keys-closure forward-func value)))
 	  (display-warning 'passthru (format-message "`%S' is not an acceptable keybinding value. Must be a string or vector keyboard macro, or a function value that satisfies `commandp'" nil) :error))))
